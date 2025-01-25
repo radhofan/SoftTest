@@ -1,10 +1,10 @@
 <script>  
     // Initialize the URLs array with one entry  
-    let urls = [{ url: '', vulnerabilityType: 'All', requestType: 'string' }];  
+    let urls = [{ url: '', vulnerabilityType: 'All', requestType: 'string', jsonInput: '' }];  
   
     function addUrl() {  
         // Create a new array reference to trigger reactivity  
-        urls = [...urls, { url: '', vulnerabilityType: 'All', requestType: 'string' }];  
+        urls = [...urls, { url: '', vulnerabilityType: 'All', requestType: 'string', jsonInput: '' }];  
     }  
   
     function removeUrl(index) {  
@@ -48,6 +48,12 @@
         padding: 8px 16px;  
         margin-left: 5px; /* Add some space between buttons */  
     }  
+    .json-input {  
+        width: 100%; /* Full width for the JSON input */  
+        margin-top: 10px; /* Space above the textarea */  
+        padding: 8px;  
+        display: none; /* Initially hidden */  
+    }  
     .add-more-button {  
         display: block;  
         margin: 10px 0;  
@@ -60,19 +66,6 @@
     }  
     .add-more-button:hover {  
         background-color: #0056b3;  
-    }  
-    .submit-button {  
-        display: block;  
-        margin: 20px 0;  
-        padding: 10px 20px;  
-        background-color: #28a745;  
-        color: white;  
-        border: none;  
-        border-radius: 5px;  
-        cursor: pointer;  
-    }  
-    .submit-button:hover {  
-        background-color: #218838;  
     }  
 </style>  
   
@@ -88,14 +81,23 @@
                 <option value="Command Injection">Command Injection</option>  
                 <!-- Add more options as needed -->  
             </select>  
-            <select bind:value={url.requestType}>  
+            <select bind:value={url.requestType} on:change={() => url.requestType === 'json' ? url.jsonInput = '' : null}>  
                 <option value="string">String</option>  
                 <option value="int">Integer</option>  
-                <option value="json">JSON</option>  
+                <option value="json">JSON Body</option>  
             </select>  
             <button on:click={() => removeUrl(index)}>Remove</button>  
             <button on:click={() => handleSubmit(index)}>Send</button>  
         </div>  
+        {#if url.requestType === 'json'}  
+        <textarea
+            bind:value={url.jsonInput}
+            class="json-input"
+            style="display: {url.requestType === 'json' ? 'block' : 'none'};"
+            placeholder="Enter JSON here..."
+            rows="4">
+        </textarea>
+        {/if}  
     {/each}  
     <button class="add-more-button" on:click={addUrl}>Add More</button>  
 </div>  
