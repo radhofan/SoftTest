@@ -1,11 +1,10 @@
 <script>  
-    import { onMount } from 'svelte';  
-  
-    let urls = [{ url: '', vulnerabilityType: 'All' }];  
+    // Initialize the URLs array with one entry  
+    let urls = [{ url: '', vulnerabilityType: 'All', requestType: 'string' }];  
   
     function addUrl() {  
         // Create a new array reference to trigger reactivity  
-        urls = [...urls, { url: '', vulnerabilityType: 'All' }];  
+        urls = [...urls, { url: '', vulnerabilityType: 'All', requestType: 'string' }];  
     }  
   
     function removeUrl(index) {  
@@ -13,9 +12,11 @@
         urls = urls.filter((_, i) => i !== index);  
     }  
   
-    function handleSubmit() {  
-        // Handle form submission here  
-        console.log('URLs to test:', urls);  
+    function handleSubmit(index) {  
+        // Handle form submission for the specific URL  
+        const urlToTest = urls[index];  
+        console.log('Testing URL:', urlToTest);  
+        // Here you can add logic to send the data to your backend  
     }  
 </script>  
   
@@ -30,19 +31,22 @@
     }  
     .url-container {  
         margin-bottom: 10px;  
+        display: flex; /* Use flexbox to align items in a row */  
+        align-items: center; /* Center items vertically */  
     }  
     .url-container input {  
-        width: 60%;  
+        width: 40%; /* Adjust width as needed */  
         padding: 8px;  
         margin-right: 10px;  
     }  
     .url-container select {  
-        width: 20%;  
+        width: 20%; /* Adjust width as needed */  
         padding: 8px;  
         margin-right: 10px;  
     }  
     .url-container button {  
         padding: 8px 16px;  
+        margin-left: 5px; /* Add some space between buttons */  
     }  
     .add-more-button {  
         display: block;  
@@ -84,9 +88,14 @@
                 <option value="Command Injection">Command Injection</option>  
                 <!-- Add more options as needed -->  
             </select>  
+            <select bind:value={url.requestType}>  
+                <option value="string">String</option>  
+                <option value="int">Integer</option>  
+                <option value="json">JSON</option>  
+            </select>  
             <button on:click={() => removeUrl(index)}>Remove</button>  
+            <button on:click={() => handleSubmit(index)}>Send</button>  
         </div>  
     {/each}  
     <button class="add-more-button" on:click={addUrl}>Add More</button>  
-    <button class="submit-button" on:click={handleSubmit}>Send</button>  
 </div>  
