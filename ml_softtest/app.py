@@ -60,13 +60,13 @@ def handle_test():
             
             original_url = data['url']
             response = requests.post(original_url, json=modified_json)  
-            return jsonify({"response": response.json()}), 200
+            return jsonify({"status_code": response.status_code}), 200
         
         else:
             modified_url = insert_vulnerability(data['url'], data.get('vulnerabilityType', ''))
             
             response = requests.get(modified_url)  
-            return jsonify({"response": response.json()}), 200
+            return jsonify({"status_code": response.status_code}), 200
 
     except Exception as e:
         print("Error occurred:", str(e))
