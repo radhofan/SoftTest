@@ -1,23 +1,33 @@
 <script>  
-    // Initialize the URLs array with one entry  
     let urls = [{ url: '', vulnerabilityType: 'All', requestType: 'string', jsonInput: '' }];  
   
     function addUrl() {  
-        // Create a new array reference to trigger reactivity  
         urls = [...urls, { url: '', vulnerabilityType: 'All', requestType: 'string', jsonInput: '' }];  
     }  
   
-    function removeUrl(index) {  
-        // Create a new array reference to trigger reactivity  
+    function removeUrl(index) {   
         urls = urls.filter((_, i) => i !== index);  
     }  
   
     function handleSubmit(index) {  
-        // Handle form submission for the specific URL  
         const urlToTest = urls[index];  
-        console.log('Testing URL:', urlToTest);  
-        // Here you can add logic to send the data to your backend  
-    }  
+
+        fetch('http://localhost:5001/api/test', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(urlToTest)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Server response:', data);
+        })
+        .catch(error => {
+            console.error('Error sending data:', error);
+        });
+    }
+
 </script>  
   
 <style>  
@@ -31,28 +41,28 @@
     }  
     .url-container {  
         margin-bottom: 10px;  
-        display: flex; /* Use flexbox to align items in a row */  
-        align-items: center; /* Center items vertically */  
+        display: flex; 
+        align-items: center;
     }  
     .url-container input {  
-        width: 40%; /* Adjust width as needed */  
+        width: 40%; 
         padding: 8px;  
         margin-right: 10px;  
     }  
     .url-container select {  
-        width: 20%; /* Adjust width as needed */  
+        width: 20%;  
         padding: 8px;  
         margin-right: 10px;  
     }  
     .url-container button {  
         padding: 8px 16px;  
-        margin-left: 5px; /* Add some space between buttons */  
+        margin-left: 5px; 
     }  
     .json-input {  
-        width: 100%; /* Full width for the JSON input */  
-        margin-top: 10px; /* Space above the textarea */  
+        width: 100%;   
+        margin-top: 10px; 
         padding: 8px;  
-        display: none; /* Initially hidden */  
+        display: none;   
     }  
     .add-more-button {  
         display: block;  
