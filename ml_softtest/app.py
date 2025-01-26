@@ -1,4 +1,5 @@
 import json
+import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -34,6 +35,7 @@ def insert_vulnerability_json(json_input):
         return {key: f"{value}{xss_payload}{sql_injection_payload}{command_injection_payload}" if isinstance(value, str) else value for key, value in json_input.items()}
     return json_input
 
+
 @app.route('/api/test', methods=['POST'])
 def handle_test():
     try:
@@ -44,25 +46,28 @@ def handle_test():
         request_type = data.get('requestType', '')
         
         if request_type == 'json':
-            # Check if jsonInput exists and is a valid JSON string
             json_input_str = data.get('jsonInput', '')
             if json_input_str:
                 try:
-                    # Attempt to parse jsonInput if it's a string
-                    json_input = json.loads(json_input_str)  # Convert string to dict
+                    json_input = json.loads(json_input_str)  
                 except json.JSONDecodeError:
                     return jsonify({"message": "Invalid JSON format."}), 400
             else:
                 json_input = {}
 
-            # Process the JSON input
             modified_json = insert_vulnerability_json(json_input)
             print(modified_json)
-            return jsonify({"message": "Data processed successfully!", "modified_json": modified_json}), 200
+            
+            original_url = data['url']
+            response = requests.post(original_url, json=modified_json)  
+            return jsonify({"response": response.json()}), 200
         
-        # Process URL for other request types
-        modified_url = insert_vulnerability(data['url'], data.get('vulnerabilityType', ''))
-        return jsonify({"message": "Data processed successfully!", "modified_url": modified_url}), 200
+        else:
+            modified_url = insert_vulnerability(data['url'], data.get('vulnerabilityType', ''))
+            
+            response = requests.get(modified_url)  
+            return jsonify({"response": response.json()}), 200
+
     except Exception as e:
         print("Error occurred:", str(e))
         return jsonify({"message": "An error occurred.", "error": str(e)}), 500
