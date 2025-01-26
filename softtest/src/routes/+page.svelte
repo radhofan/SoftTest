@@ -19,20 +19,18 @@
             },
             body: JSON.stringify(urlToTest)
         })
-        .then(response => {
-            // Capture response status code
-            const statusCode = response.status;
+        .then(response => response.json())  // First parse the JSON response
+        .then(data => {
+            // Access status_code from the returned JSON data
+            const statusCode = data.status_code;
 
-            return response.json().then(data => {
-                // Update the response status in the corresponding URL item
-                urls[index].responseStatus = statusCode;
-                console.log('Server response:', data);
-            });
+            // Update the response status in the corresponding URL item
+            urls[index].responseStatus = statusCode;
+
+            console.log('Server response status code:', statusCode);
         })
         .catch(error => {
             console.error('Error sending data:', error);
-            // Handle error status
-            urls[index].responseStatus = 'Error';
         });
     }
 </script>  
