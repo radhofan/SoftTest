@@ -63,6 +63,7 @@
         margin-top: 10px; 
         padding: 8px;  
         display: none;   
+        margin-bottom: 10px;
     }  
     .add-more-button {  
         display: block;  
