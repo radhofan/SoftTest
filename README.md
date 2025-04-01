@@ -29,13 +29,13 @@ python app.py
 ## Sample program
 
 Program overview
-![Softtest image](images/image2.png)
+![Softtest image](images/image1.png)
 
 Here the default sample backend API is `http://127.0.0.1:5000/items` which takes a string object as the parameter, in the program
 users can select what type of vulnerabilites to detect with softtest, currently soffttest provides XSS, sql injection and command injection. Users can also select what kind of parameter the API accepts.
 
 Softtest answer
-![Softtest image](images/image1.png)
+![Softtest image](images/image2.png)
 
 
 
